@@ -13,7 +13,7 @@ MFRC522 rfid(ssPin, rstPin);
 DS1302 rtc(5, 4, 3);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-String waitRFIDCard();
+String readRFIDCard();
 
 void setup() {
   lcd.init();
@@ -47,40 +47,46 @@ void loop() {
   lcd.setCursor(cursorPos, 1);
   lcd.print(timeStr);
 
-  String readID = waitRFIDCard();
-  bool validID = false;
+  String readID = readRFIDCard();
+  
+  if(readID != "") {
+    bool validID = false;
 
-  for(int i = 0; i < 2; i++) {
-    if(readID.equals(acceptedIDs[i])) {
-      validID = true;
+    for(int i = 0; i < 2; i++) {
+      if(readID.equals(acceptedIDs[i])) {
+        validID = true;
+      }
     }
-  }
 
-  if(validID) {
-    lcd.clear();
-    lcd.setCursor(7, 0);
-    lcd.print("OK");
+    if(validID) {
+      lcd.clear();
+      lcd.setCursor(7, 0);
+      lcd.print("OK");
 
-    tone(buzzerPin, 1500);
-    delay(90);
-    noTone(buzzerPin);
+      tone(buzzerPin, 1500);
+      delay(90);
+      noTone(buzzerPin);
+    } else {
+      lcd.clear();
+      lcd.print("Tente novamente");
+    }
+
+    delay(2000);
   } else {
-    lcd.clear();
-    lcd.print("Tente novamente");
+    delay(500);
   }
-
-  delay(2000);
 }
 
-String waitRFIDCard() {
-  while(!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) {
-    delay(50);
-  }
-
+String readRFIDCard() {
   String uid = "";
 
-  for(byte i = 0; i < rfid.uid.size; i++) {
-    uid.concat(String(rfid.uid.uidByte[i], HEX));
+  if(rfid.PICC_IsNewCardPresent() || rfid.PICC_ReadCardSerial()) {
+    for(byte i = 0; i < rfid.uid.size; i++) {
+      uid.concat(String(rfid.uid.uidByte[i], HEX));
+    }
+
+    Serial.print("Card: ");
+    Serial.println(uid);
   }
 
   return uid;
