@@ -10,7 +10,7 @@ const int buzzerPin = 2;
 const String acceptedIDs[2] = {"397fc9b2", "3cea3764"};
 
 MFRC522 rfid(ssPin, rstPin);
-DS1302 rtc(3, 4, 5);
+DS1302 rtc(5, 4, 3);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 String waitRFIDCard();
@@ -37,10 +37,15 @@ void setup() {
 }
 
 void loop() {
+  String timeStr = rtc.getTimeStr();
+  int timeLen = timeStr.length();
+  int cursorPos = (16 - timeLen) / 2;
+
   lcd.clear();
-  lcd.print("Aproxime o");
-  lcd.setCursor(0, 1);
-  lcd.print("cartao");
+  lcd.setCursor(3, 0);
+  lcd.print("Bem vindo!");
+  lcd.setCursor(cursorPos, 1);
+  lcd.print(timeStr);
 
   String readID = waitRFIDCard();
   bool validID = false;
