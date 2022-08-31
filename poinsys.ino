@@ -4,6 +4,7 @@
 
 const int ssPin = 10;
 const int rstPin = 9;
+const int buzzerPin = 2;
 
 const String acceptedIDs[2] = {"397fc9b2", "3cea3764"};
 
@@ -42,9 +43,19 @@ void loop() {
     }
   }
 
-  lcd.clear();
-  lcd.setCursor(7, 0);
-  lcd.print("OK");
+  if(validID) {
+    lcd.clear();
+    lcd.setCursor(7, 0);
+    lcd.print("OK");
+
+    tone(buzzerPin, 1500);
+    delay(90);
+    noTone(buzzerPin);
+  } else {
+    lcd.clear();
+    lcd.print("Tente novamente");
+  }
+
   delay(2000);
 }
 
