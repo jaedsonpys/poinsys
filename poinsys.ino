@@ -5,6 +5,8 @@
 const int ssPin = 10;
 const int rstPin = 9;
 
+const String acceptedIDs[2] = {"397fc9b2", "3cea3764"};
+
 MFRC522 rfid(ssPin, rstPin);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -21,10 +23,29 @@ void setup() {
 
   lcd.setCursor(4, 0);
   lcd.print("Poinsys");
+
+  delay(1000);
 }
 
 void loop() {
+  lcd.clear();
+  lcd.print("Aproxime o");
+  lcd.setCursor(0, 1);
+  lcd.print("cartao");
 
+  String readID = waitRFIDCard();
+  bool validID = false;
+
+  for(int i = 0; i < 2; i++) {
+    if(readID.equals(acceptedIDs[i])) {
+      validID = true;
+    }
+  }
+
+  lcd.clear();
+  lcd.setCursor(7, 0);
+  lcd.print("OK");
+  delay(2000);
 }
 
 String waitRFIDCard() {
