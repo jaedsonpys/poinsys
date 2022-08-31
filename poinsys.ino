@@ -1,6 +1,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <DS1302.h>
 
 const int ssPin = 10;
 const int rstPin = 9;
@@ -9,6 +10,7 @@ const int buzzerPin = 2;
 const String acceptedIDs[2] = {"397fc9b2", "3cea3764"};
 
 MFRC522 rfid(ssPin, rstPin);
+DS1302 rtc(3, 4, 5);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 String waitRFIDCard();
@@ -21,6 +23,12 @@ void setup() {
   rfid.PCD_Init();
 
   Serial.begin(9600);
+
+  rtc.halt(false);
+  rtc.writeProtect(false);
+
+  rtc.setDate(1, 1, 2022);
+  rtc.setTime(0, 0, 0);
 
   lcd.setCursor(4, 0);
   lcd.print("Poinsys");
