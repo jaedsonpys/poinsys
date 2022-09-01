@@ -18,6 +18,8 @@ class PoinSys:
             date = datetime.datetime.now()
             self.ser.write(date.strftime('%d/%m/%Y').encode())
 
+        self._check_id()
+
     def _check_id(self) -> None:
         while True:
             uid = self.ser.readline().decode()
@@ -25,12 +27,15 @@ class PoinSys:
 
             user = self.cookiedb.get(f'users/{uid}')
             time_now = datetime.datetime.now()
+            time_str = time_now.strftime('%H:%M:%S')
 
             if user:
-                self.ser.write(user['name'].encode())
+                self.ser.write((user['name'] + '\n').encode())
+                self.ser.write((time_str + '\n').encode())
+
                 entries_list = self.cookiedb.get(f'users/{uid}/entries')
                 entries_list.append(('OK', time_now.strftime('%d.%m.%Y %H:%M:%S')))
 
                 self.cookiedb.add(f'users/{uid}/entries', entries_list)
             else:
-                self.ser.write(b'false')
+                self.ser.write(b'false\n')
