@@ -25,12 +25,17 @@ void setup() {
   lcd.setCursor(4, 0);
   lcd.print("Poinsys");
 
-  delay(1000);
+  Serial.println("started");
+
+  while(!Serial.available()) {
+    delay(10);
+  }
 }
 
 void loop() {
   String timeStr = "";
-  String dateStr = "";
+  String dateStr = Serial.readString();
+  dateStr.replace("\n", "");
 
   lcd.clear();
   lcd.setCursor(4, 0);
