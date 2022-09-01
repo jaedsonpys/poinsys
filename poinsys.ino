@@ -70,7 +70,10 @@ void loop() {
       noTone(buzzerPin);
     } else {
       lcd.clear();
-      lcd.print("Tente novamente");
+      lcd.setCursor(6, 0);
+      lcd.print("Nao");
+      lcd.setCursor(2, 1);
+      lcd.print("reconhecido");
     }
 
     delay(2000);
