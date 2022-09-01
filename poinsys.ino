@@ -38,14 +38,13 @@ void setup() {
 
 void loop() {
   String timeStr = rtc.getTimeStr();
-  int timeLen = timeStr.length();
-  int cursorPos = (16 - timeLen) / 2;
+  String dateStr = rtc.getDateStr();
 
   lcd.clear();
-  lcd.setCursor(3, 0);
-  lcd.print("Bem vindo!");
-  lcd.setCursor(cursorPos, 1);
-  lcd.print(timeStr);
+  lcd.setCursor(4, 0);
+  lcd.print("Aproxime");
+  lcd.setCursor(3, 1);
+  lcd.print(dateStr);
 
   String readID = readRFIDCard();
   
@@ -60,8 +59,11 @@ void loop() {
 
     if(validID) {
       lcd.clear();
-      lcd.setCursor(7, 0);
-      lcd.print("OK");
+      lcd.setCursor(3, 0);
+      lcd.print("Bem vindo!");
+
+      lcd.setCursor(4, 1);
+      lcd.print(timeStr);
 
       tone(buzzerPin, 1500);
       delay(90);
