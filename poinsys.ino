@@ -80,13 +80,10 @@ void loop() {
 String readRFIDCard() {
   String uid = "";
 
-  if(rfid.PICC_IsNewCardPresent() || rfid.PICC_ReadCardSerial()) {
+  if(rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
     for(byte i = 0; i < rfid.uid.size; i++) {
       uid.concat(String(rfid.uid.uidByte[i], HEX));
     }
-
-    Serial.print("Card: ");
-    Serial.println(uid);
   }
 
   return uid;
