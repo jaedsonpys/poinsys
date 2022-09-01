@@ -17,3 +17,20 @@ class PoinSys:
         if signal == 'started':
             date = datetime.datetime.now()
             self.ser.write(date.strftime('%d/%m/%Y').encode())
+
+    def _check_id(self) -> None:
+        while True:
+            uid = self.ser.readline().decode()
+            uid = uid.replace('\r\n', '')
+
+            user = self.cookiedb.get(f'users/{uid}')
+            time_now = datetime.datetime.now()
+
+            if user:
+                self.ser.write(user['name'].encode())
+                entries_list = self.cookiedb.get(f'users/{uid}/entries')
+                entries_list.append(('OK', time_now.strftime('%d.%m.%Y %H:%M:%S')))
+
+                self.cookiedb.add(f'users/{uid}/entries', entries_list)
+            else:
+                self.ser.write(b'false')
