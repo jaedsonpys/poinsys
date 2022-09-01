@@ -15,13 +15,15 @@ class PoinSys:
         signal = signal.replace('\r\n', '')
 
         if signal == 'started':
-            date = datetime.datetime.now()
-            self.ser.write(date.strftime('%d/%m/%Y').encode())
-
-        self._check_id()
+            self._check_id()
 
     def _check_id(self) -> None:
         while True:
+            print('Send date')
+            date = datetime.datetime.now()
+            self.ser.write((date.strftime('%d/%m/%Y') + '\r\n').encode())
+
+            print('Wait UID...')
             uid = self.ser.readline().decode()
             uid = uid.replace('\r\n', '')
 
@@ -29,13 +31,16 @@ class PoinSys:
             time_now = datetime.datetime.now()
             time_str = time_now.strftime('%H:%M:%S')
 
+            print(f'Card ID: {uid}')
+
             if user:
-                self.ser.write((user['name'] + '\n').encode())
-                self.ser.write((time_str + '\n').encode())
+                print(f'User name: {user["name"]}')
+                self.ser.write(f'{user["name"],{time_str}}\r\n'.encode())
 
                 entries_list = self.cookiedb.get(f'users/{uid}/entries')
                 entries_list.append(('OK', time_now.strftime('%d.%m.%Y %H:%M:%S')))
 
-                self.cookiedb.add(f'users/{uid}/entries', entries_list)
+                self.cookiedb.update(f'users/{uid}/entries', entries_list)
             else:
-                self.ser.write(b'false\n')
+                print('Not found')
+                self.ser.write(b'false\r\n')
