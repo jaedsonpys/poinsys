@@ -32,7 +32,7 @@ void setup() {
 
 void loop() {
   String dateStr = Serial.readString();
-  dateStr.replace("\n", "");
+  dateStr.trim();
 
   lcd.clear();
   lcd.setCursor(4, 0);
@@ -44,25 +44,25 @@ void loop() {
   Serial.println(readID);
 
   while(!Serial.available()) {
-    delay(10);
+    delay(50);
   }
 
-  String validID = Serial.readString();
-  validID.replace("\n", "");
+  String result = Serial.readString();
+  result.trim();
 
-  if(validID != "false") {
+  if(result != "false") {
     while(!Serial.available()) {
-      delay(10);
+      delay(50);
     }
 
     String timeStr = Serial.readString();
-    timeStr.replace("\n", "");
+    timeStr.trim();
 
-    int cursorPos = (16 - validID.length()) / 2;
+    int cursorPos = (16 - result.length()) / 2;
 
     lcd.clear();
     lcd.setCursor(cursorPos, 0);
-    lcd.print(validID);
+    lcd.print(result);
 
     lcd.setCursor(4, 1);
     lcd.print(timeStr);
