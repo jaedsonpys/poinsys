@@ -6,8 +6,6 @@ const int ssPin = 10;
 const int rstPin = 9;
 const int buzzerPin = 2;
 
-const String acceptedIDs[2] = {"397fc9b2", "3cea3764"};
-
 MFRC522 rfid(ssPin, rstPin);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -33,7 +31,6 @@ void setup() {
 }
 
 void loop() {
-  String timeStr = "";
   String dateStr = Serial.readString();
   dateStr.replace("\n", "");
 
@@ -44,19 +41,28 @@ void loop() {
   lcd.print(dateStr);
 
   String readID = waitRFIDCard();
-  
-  bool validID = false;
+  Serial.println(readID);
 
-  for(int i = 0; i < 2; i++) {
-    if(readID.equals(acceptedIDs[i])) {
-      validID = true;
-    }
+  while(!Serial.available()) {
+    delay(10);
   }
 
-  if(validID) {
+  String validID = Serial.readString();
+  validID.replace("\n", "");
+
+  if(validID != "false") {
+    while(!Serial.available()) {
+      delay(10);
+    }
+
+    String timeStr = Serial.readString();
+    timeStr.replace("\n", "");
+
+    int cursorPos = (16 - validID.length()) / 2;
+
     lcd.clear();
-    lcd.setCursor(3, 0);
-    lcd.print("Bem vindo!");
+    lcd.setCursor(cursorPos, 0);
+    lcd.print(validID);
 
     lcd.setCursor(4, 1);
     lcd.print(timeStr);
