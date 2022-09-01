@@ -10,6 +10,8 @@ MFRC522 rfid(ssPin, rstPin);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 String waitRFIDCard();
+String getUserName(String queryResult);
+String getTime(String queryResult);
 
 void setup() {
   lcd.init();
@@ -51,18 +53,14 @@ void loop() {
   result.trim();
 
   if(result != "false") {
-    while(!Serial.available()) {
-      delay(50);
-    }
+    String userName = getUserName(result);
+    String timeStr = getTime(result);
 
-    String timeStr = Serial.readString();
-    timeStr.trim();
-
-    int cursorPos = (16 - result.length()) / 2;
+    int cursorPos = (16 - userName.length()) / 2;
 
     lcd.clear();
     lcd.setCursor(cursorPos, 0);
-    lcd.print(result);
+    lcd.print(userName);
 
     lcd.setCursor(4, 1);
     lcd.print(timeStr);
@@ -93,4 +91,29 @@ String waitRFIDCard() {
   }
 
   return uid;
+}
+
+String getUserName(String queryResult) {
+  String userName = "";
+
+  for(int i = 0; i < queryResult.length() + 1; i++) {
+    if(queryResult[i] != ',') {
+      userName.concat(queryResult[i]);
+    } else {
+      break;
+    }
+  }
+
+  return userName;
+}
+
+String getTime(String queryResult) {
+  String timeStr = "";
+  int sepIndex = queryResult.indexOf(',') + 1;
+
+  for(int i = sepIndex; i < queryResult.length(); i++) {
+    timeStr.concat(queryResult[i]);
+  }
+
+  return timeStr;
 }
