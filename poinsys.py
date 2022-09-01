@@ -35,7 +35,8 @@ class PoinSys:
 
             if user:
                 print(f'User name: {user["name"]}')
-                self.ser.write(f'{user["name"],{time_str}}\r\n'.encode())
+                print(f'Time: {time_str}')
+                self.ser.write(f'{user["name"]},{time_str}\r\n'.encode())
 
                 entries_list = self.cookiedb.get(f'users/{uid}/entries')
                 entries_list.append(('OK', time_now.strftime('%d.%m.%Y %H:%M:%S')))
