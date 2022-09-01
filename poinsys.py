@@ -2,6 +2,7 @@ import serial
 import cookiedb
 
 import datetime
+import time
 
 
 class PoinSys:
@@ -45,3 +46,5 @@ class PoinSys:
             else:
                 print('Not found')
                 self.ser.write(b'false\r\n')
+
+            time.sleep(2)
