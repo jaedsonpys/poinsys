@@ -9,6 +9,8 @@ class PoinSys:
         self.ser = serial.Serial(serial_port)
         self.cookiedb = cookiedb.CookieDB()
 
+        self.cookiedb.open('poinsys')
+
         signal = self.ser.readline().decode()
         signal = signal.replace('\r\n', '')
 
