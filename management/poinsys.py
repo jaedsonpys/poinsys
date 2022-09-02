@@ -19,11 +19,9 @@ class PoinSys:
 
     def _check_id(self) -> None:
         while True:
-            print('Send date')
             date = datetime.datetime.now()
             self.ser.write((date.strftime('%d/%m/%Y') + '\r\n').encode())
 
-            print('Wait UID...')
             uid = self.ser.readline().decode()
             uid = uid.replace('\r\n', '')
 
@@ -31,6 +29,7 @@ class PoinSys:
             time_now = datetime.datetime.now()
             time_str = time_now.strftime('%H:%M:%S')
 
+            print('-=' * 15)
             print(f'Card ID: {uid}')
 
             if user:
@@ -46,4 +45,5 @@ class PoinSys:
                 print('Not found')
                 self.ser.write(b'false\r\n')
 
+            print('-=' * 15)
             time.sleep(2)
