@@ -1,6 +1,6 @@
 # Poinsys
 
-A simple point system made with Arduino, obtaining information via serial communication with Python.
+A simple point (entry and exit of users) system made with Arduino, obtaining information via serial communication with Python.
 
 - Arduino UNO
 - RFID - MFRC522
