@@ -45,5 +45,4 @@ class PoinSys:
                 print('Not found')
                 self.ser.write(b'false\r\n')
 
-            print('-=' * 15)
             time.sleep(2)
