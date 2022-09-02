@@ -9,7 +9,6 @@ class PoinSys:
     def __init__(self, serial_port: str) -> None:
         self.ser = serial.Serial(serial_port)
         self.cookiedb = cookiedb.CookieDB()
-
         self.cookiedb.open('poinsys')
 
         signal = self.ser.readline().decode()
