@@ -76,7 +76,7 @@ void loop() {
     lcd.print("reconhecido");
   }
 
-  delay(2000);
+  delay(1000);
 }
 
 String waitRFIDCard() {

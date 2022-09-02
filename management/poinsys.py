@@ -46,4 +46,4 @@ class PoinSys:
                 print('Not found')
                 self.ser.write(b'false\r\n')
 
-            time.sleep(2)
+            time.sleep(1.5)
