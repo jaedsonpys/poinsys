@@ -6,18 +6,19 @@ import time
 
 
 class PoinSys:
-    def __init__(self, serial_port: str) -> None:
-        self.ser = serial.Serial(serial_port)
+    def __init__(self) -> None:
         self.cookiedb = cookiedb.CookieDB()
         self.cookiedb.open('poinsys')
+
+    def start(self, serial_port: str) -> None:
+        self.ser = serial.Serial(serial_port)
 
         signal = self.ser.readline().decode()
         signal = signal.replace('\r\n', '')
 
-        if signal == 'started':
-            self._check_id()
+        if signal != 'started':
+            raise ValueError('Unexpected value received from serial')
 
-    def _check_id(self) -> None:
         while True:
             date = datetime.datetime.now()
             self.ser.write((date.strftime('%d/%m/%Y') + '\r\n').encode())
